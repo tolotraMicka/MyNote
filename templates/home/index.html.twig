@@ -14,8 +14,17 @@
             <div class="item">
                 <p>{{note.titre}}</p>
                 <p>{{note.description}}</p>
+                <a href="{{path('app_modification',{id:note.id})}}">
+                    <button type="button">modif</button>
+                </a>
+                <a href="{{path('app_delete',{id:note.id})}}">
+                    <button type="button" onclick="supprimer({{note.id}})">supprimer</button>
+                </a>
             </div>
         {% endfor %} 
     </section>
 </div>
+<script>
+    
+</script>
 {% endblock %}
