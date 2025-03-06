@@ -1,30 +1,89 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="container">
-    <div class="content">
-        <h1 class="h1">My note</h1>
-        {{ form_start(form) }}
-            {{ form_row(form.titre) }}
-            {{ form_row(form.description) }}
-           <button type="submit">Valider</button> 
-        {{ form_end(form) }} 
-    </div>
-    <section class="content_list">
-        {% for note in noteAll %}
-            <div class="item">
-                <p>{{note.titre}}</p>
-                <p>{{note.description}}</p>
-                <a href="{{path('app_modification',{id:note.id})}}">
-                    <button type="button">modif</button>
-                </a>
-                <a href="{{path('app_delete',{id:note.id})}}">
-                    <button type="button" onclick="supprimer({{note.id}})">supprimer</button>
-                </a>
-            </div>
-        {% endfor %} 
-    </section>
-</div>
-<script>
+	<div class="container">
+		<div class="main">
+			<h1 class="h1">My note</h1>
+			<div class="content">
+				{{ form_start(form) }}
+				{{ form_row(form.titre, {'label': ' ','attr': {'class': 'form-control','placeholder': 'Entrez le titre','onchange': "updateTexta(this, 'input')"}}) }}
+				{{ form_row(form.description,{'label':' ','attr': {'class': 'form-control', 'placeholder': 'Entrez la description','onchange':"updateTexta(this,'textarea')"  }}) }}
+				<button type="submit" class="btn_valide">Valider</button>
+				{{ form_end(form) }}
+			</div>
+			<section class="content_list">
+				{% for note in noteAll %}
+					<div class="item">
+						<p class="title_note">{{note.titre}}</p>
+						<p class="text_descri">{{note.description}}</p>
+						<a href="{{path('app_modification',{id:note.id})}}">
+							<button type="button">modif</button>
+						</a>
+						{# <a href="{{path('app_delete',{id:note.id})}}">
+						                        <button type="button" onclick="supprimer({{note.id}})">supprimer</button>
+						                    </a> #}
+						<button type="button" onclick="supprimer({{note.id}})">supprimer</button>
+					</div>
+				{% endfor %}
+			</section>
+			<button class="my_btn" onclick="create()">+</button>
+		</div>
+	</div>
+	<script>
+		function supprimer(id) {
+            $.ajax({
+                url: "{{ path('app_supprimer') }}",
+                method: "GET",
+                data: {id: id},
+                success: function (response) {
+                    location.reload();
+                }
+            });
+        }
+        var content_form = document.querySelector('.content');
+        content_form.classList.add('hidden');
+
+        var my_btn = document.querySelector('.my_btn');
+        if (my_btn) {
+        my_btn.addEventListener('click', function () {
+            content_form.classList.toggle('hidden');
+        });
+        }
+
+        function updateTexta(el, type) {
+            $.ajax({
+                url:"{{ path('app_maj') }}",
+                method: "get",
+                data: {
+					id : el.dataset.id,
+                    type: type,
+                    element: el.value
+                },
+                success: function (response) {
     
-</script>
+                }
+            });
+        }
+
+		function create() {
+			$.ajax({
+                url:"{{ path('app_create') }}",
+                method: "get",
+                success: function (response) {
+					var input = document.querySelectorAll('.form-control');
+					for(var i=0; i<input.length;i++){
+    					input[i].dataset.id=response;
+					}
+                },
+				error : function (er) {
+            		console.error(er);
+        		}
+            });
+		}
+		var btn_valide = document.querySelector('.btn_valide');
+		if(btnvalide) {
+			btn_valide.addEventListener('click',function(){
+				location.reload();
+			});
+		}
+	</script>
 {% endblock %}

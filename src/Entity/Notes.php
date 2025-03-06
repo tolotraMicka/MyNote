@@ -27,6 +27,11 @@ class Notes
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $url_img;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,18 @@ class Notes
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getUrlImg(): ?string
+    {
+        return $this->url_img;
+    }
+
+    public function setUrlImg(?string $url_img): self
+    {
+        $this->url_img = $url_img;
 
         return $this;
     }

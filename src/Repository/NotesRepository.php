@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Notes;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<Notes>
@@ -16,8 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NotesRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $em;
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $em)
     {
+        $this->em = $em;
         parent::__construct($registry, Notes::class);
     }
 
@@ -38,7 +41,34 @@ class NotesRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function create_note() {
+        $connection = $this->em->getConnection();
+        
+        $requete = "INSERT INTO Notes (titre, description) VALUES (:titre, :description)";
+        $statement = $connection->prepare($requete);
+        $statement->execute([
+                ':titre' => null,
+                ':description' => null
+            ]);
+        $dernier_id = $connection->lastInsertId();
+        return $dernier_id;
+    }
 
+    public function update_note($id, $type, $text) {
+        $connection = $this->em->getConnection();
+    
+        if($type === 'input') {
+            $sql = "UPDATE Notes SET titre = :text WHERE id = :id";
+        }else if($type=== 'textarea') {
+            $sql = "UPDATE Notes SET description = :text WHERE id = :id";
+        }
+        $statement = $connection->prepare($sql);
+        $statement->execute([
+            'text' => $text,
+            'id' => $id
+        ]);
+  
+    }
 //    /**
 //     * @return Notes[] Returns an array of Notes objects
 //     */

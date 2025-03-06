@@ -1,7 +1,84 @@
+@import url('https://fonts.cdnfonts.com/css/roboto');
+body {
+    font-family: 'roboto';
+}
+body * {
+    margin: 0;
+}
+.container  {
+    position: relative;
+}
 .container {
     width: 90%;
     margin: auto;
 }
 .h1 {
-    color: red;
+    color: rgba(49,45,43);
+    margin-bottom: 20px;
+}
+.content {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: 1px solid;
+    width: 255px;
+    padding: 15px;
+    z-index: 20;
+    background-color: #fff;
+    text-align: center;
+}
+.content.hidden {
+    display: none;
+}
+.main {
+    width: 400px;
+    border: 1px solid gray;
+    box-shadow: 0 0 2px 1px gray;
+    border-radius: 10px;
+    padding: 25px 25px;
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.my_btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 25px;
+    padding: 0px 8px;
+    border-radius: 20px;
+    background-color: rgba(49, 45, 43);
+    color: #fff;
+    cursor: pointer;
+}
+.item {
+    border: 2px solid;
+    padding: 10px 20px;
+    position: relative;
+    color: rgba(49,45,43);
+    background-color: #fff;
+    height: 65px;
+    margin: 0 0 15px;
+}
+.content_list {
+    padding: 2px 5px;
+    overflow-y: scroll;
+    height: 200px;
+}
+input.form-control, textarea.form-control {
+    border: none;
+    outline: none;
+    padding: 5px;
+    margin-bottom: 15px;
+    width: 90%;
+}
+input.form-control {
+    border-bottom: 1px dashed black;
+}
+textarea.form-control {
+    resize: none;
+    height: 110px;
 }
