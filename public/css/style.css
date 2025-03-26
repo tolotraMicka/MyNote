@@ -1,4 +1,5 @@
 @import url('https://fonts.cdnfonts.com/css/roboto');
+@import url('https://fonts.cdnfonts.com/css/poppins');
 body {
     font-family: 'roboto';
 }
@@ -81,4 +82,90 @@ input.form-control {
 textarea.form-control {
     resize: none;
     height: 110px;
+}
+
+
+/*code de test */
+.my_btn:hover .by_content.show {
+    display: block;
+}
+
+.by_content {
+    width: 186px;
+    box-shadow: 0px 0px 10px 0px #00000033;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #FFFFFF;
+    position: absolute;
+    display: none;
+}
+.by_content .by_item {
+    padding: 6px 18px 8px;
+    
+}
+.by_content .by_item:first-child {
+    background: #DC5318;
+    border-radius: 10px 10px 0 0;
+    position: relative;
+}
+.by_content .by_title {
+    font-weight: 600;
+    font-size: 12px;
+    color: #FFFFFF;
+}
+.by_content .by_text {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 17px;
+    color: #000000;
+    margin-bottom: 4px;
+}
+.by_content .by_date, .by_content .by_date * {
+    font-weight: 400;
+    font-style: italic;
+    font-size: 10px;
+    color: #7E7E7E;
+}
+.by_close {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    cursor: pointer;
+    color: #fff;
+    -webkit-transition: all 100ms;
+    -o-transition: all 100ms;
+    transition: all 100ms;
+    -ms-flex-item-align: start;
+    align-self: flex-start;
+    top: 3px;
+    right: 4px;
+    border: unset;
+    background-color: transparent;
+}
+
+.by_close::before,
+.by_close::after{
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+	-webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+	-ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+	transform: translateX(-50%) translateY(-50%) rotate(45deg);
+	border-radius: 3px;
+	background: currentColor;
+}
+.by_close::before{
+	width: 2px;
+	height: 13px;
+}
+.by_close::after{
+	width: 13px;
+	height: 2px;
 }

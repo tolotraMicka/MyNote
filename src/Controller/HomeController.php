@@ -43,7 +43,6 @@ class HomeController extends AbstractController
     public function create(Request $request,NotesRepository $note_repo)
     {
         $last_id = $note_repo->create_note();
-       
         return $this->json($last_id,200);
     }
     /**
@@ -84,17 +83,7 @@ class HomeController extends AbstractController
         // $jsonContent = $serializer->serialize($note, 'json');
         // $response = new JsonResponse($jsonContent,200,[],true);
     }
-    /**
-     * @Route("/supprimer/{id}", name="app_delete", methods= "GET")
-     */
-    function delete(int $id,Request $request,NotesRepository $note_repo) {
-
-        $note = $note_repo->findOneBy(['id'=>$id]);
-        $this->em->remove($note);
-        $this->em->flush();
-        return $this->redirectToRoute('app_home');
-        
-    }
+    
      /**
      * @Route("/supp", name="app_supprimer", methods= "GET")
      */

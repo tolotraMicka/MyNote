@@ -19,8 +19,8 @@
 							<button type="button">modif</button>
 						</a>
 						{# <a href="{{path('app_delete',{id:note.id})}}">
-						                        <button type="button" onclick="supprimer({{note.id}})">supprimer</button>
-						                    </a> #}
+												                        <button type="button" onclick="supprimer({{note.id}})">supprimer</button>
+												                    </a> #}
 						<button type="button" onclick="supprimer({{note.id}})">supprimer</button>
 					</div>
 				{% endfor %}
@@ -28,62 +28,72 @@
 			<button class="my_btn" onclick="create()">+</button>
 		</div>
 	</div>
+
+
 	<script>
-		function supprimer(id) {
-            $.ajax({
-                url: "{{ path('app_supprimer') }}",
-                method: "GET",
-                data: {id: id},
-                success: function (response) {
-                    location.reload();
-                }
-            });
-        }
-        var content_form = document.querySelector('.content');
-        content_form.classList.add('hidden');
+				/*show and hide content*/
+		var content_form = document.querySelector('.content');
+		content_form.classList.add('hidden');
 
-        var my_btn = document.querySelector('.my_btn');
-        if (my_btn) {
-        my_btn.addEventListener('click', function () {
-            content_form.classList.toggle('hidden');
-        });
-        }
-
-        function updateTexta(el, type) {
-            $.ajax({
-                url:"{{ path('app_maj') }}",
-                method: "get",
-                data: {
-					id : el.dataset.id,
-                    type: type,
-                    element: el.value
-                },
-                success: function (response) {
-    
-                }
-            });
-        }
-
+		var my_btn = document.querySelector('.my_btn');
+		if (my_btn) {
+			my_btn.addEventListener('click', function () {
+			content_form.classList.toggle('hidden');
+			});
+		}
+		/*---------------------------------*/
+		/*---------------Create note with data null and attibuate id -> lastId -----------------*/
 		function create() {
-			$.ajax({
-                url:"{{ path('app_create') }}",
-                method: "get",
-                success: function (response) {
-					var input = document.querySelectorAll('.form-control');
-					for(var i=0; i<input.length;i++){
-    					input[i].dataset.id=response;
+			if(content_form.classList.contains("hidden")){
+				$.ajax({
+					url:"{{ path('app_create') }}",
+					method: "get",
+					success: function (response) {
+						var input = document.querySelectorAll('.form-control');
+						for (var i = 0; i < input.length; i++) {
+						input[i].dataset.id = response;
+						}
+					},
+					error: function (er) {
+						console.error(er);
 					}
-                },
-				error : function (er) {
-            		console.error(er);
-        		}
-            });
+				});
+			}
 		}
 		var btn_valide = document.querySelector('.btn_valide');
-		if(btnvalide) {
-			btn_valide.addEventListener('click',function(){
+		if (btn_valide) {
+			btn_valide.addEventListener('click', function () {
 				location.reload();
 			});
 		}
+		/* supprimer le note */
+		function supprimer(id) {
+			$.ajax({
+				url: "{{ path('app_supprimer') }}",
+				method: "GET",
+				data: {
+					id: id
+					},
+				success: function (response) {
+					location.reload();
+				}
+			});
+		}
+		/*--------------------------------*/
+
+		/*update information*/
+		function updateTexta(el, type) {
+			$.ajax({
+				url:"{{ path('app_maj') }}",
+				method: "get",
+				data: {
+				id: el.dataset.id,
+				type: type,
+				element: el.value
+				},
+				success: function (response) {}
+			});
+		}
+		
 	</script>
 {% endblock %}
