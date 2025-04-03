@@ -69,6 +69,13 @@ class NotesRepository extends ServiceEntityRepository
         ]);
   
     }
+
+    function all_notes() {
+        $connection = $this->em->getConnection();
+        $requete = "select * from Notes order by id desc";
+        $statement = $connection->executeQuery($requete);
+        return  $statement->fetchAllAssociative();
+    }
 //    /**
 //     * @return Notes[] Returns an array of Notes objects
 //     */

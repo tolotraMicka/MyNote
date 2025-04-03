@@ -31,7 +31,7 @@ class HomeController extends AbstractController
 
         $form = $this->createForm(NoteType::class,$note);
 
-        $note_All = $note_repo->findAll();        
+        $note_All = $note_repo->all_notes();        
         return $this->render('home/index.html.twig', [
             'form'=>$form->createView(),
             'noteAll'=>$note_All
@@ -75,7 +75,7 @@ class HomeController extends AbstractController
             $this->em->flush();
             return $this->redirectToRoute('app_home');
         }
-        $note_All = $note_repo->findAll();        
+        $note_All = $note_repo->all_notes();       
         return $this->render('home/index.html.twig', [
             'form'=>$form->createView(),
             'noteAll'=>$note_All

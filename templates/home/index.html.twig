@@ -16,7 +16,7 @@
 						<p class="title_note">{{note.titre}}</p>
 						<p class="text_descri">{{note.description}}</p>
 						<a href="{{path('app_modification',{id:note.id})}}">
-							<button type="button">modif</button>
+							<button type="button" class="by_modif">modif</button>
 						</a>
 						{# <a href="{{path('app_delete',{id:note.id})}}">
 												                        <button type="button" onclick="supprimer({{note.id}})">supprimer</button>
@@ -31,7 +31,7 @@
 
 
 	<script>
-				/*show and hide content*/
+		/*show and hide content*/
 		var content_form = document.querySelector('.content');
 		content_form.classList.add('hidden');
 
@@ -41,10 +41,19 @@
 			content_form.classList.toggle('hidden');
 			});
 		}
+		var btn_modif = document.querySelector('.by_modif');
+		if(btn_modif) {
+			btn_modif.addEventListener('click',function(){
+				if(content_form.classList.contains('hidden')){
+					content_form.classList.remove('hidden');
+				}
+			})
+		}
 		/*---------------------------------*/
 		/*---------------Create note with data null and attibuate id -> lastId -----------------*/
-		function create() {
-			if(content_form.classList.contains("hidden")){
+		var btn_valide = document.querySelector('.btn_valide');
+		if (btn_valide) {
+			btn_valide.addEventListener('click', function () {
 				$.ajax({
 					url:"{{ path('app_create') }}",
 					method: "get",
@@ -58,11 +67,6 @@
 						console.error(er);
 					}
 				});
-			}
-		}
-		var btn_valide = document.querySelector('.btn_valide');
-		if (btn_valide) {
-			btn_valide.addEventListener('click', function () {
 				location.reload();
 			});
 		}
