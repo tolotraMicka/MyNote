@@ -5,27 +5,22 @@
 			<h1 class="h1">My note</h1>
 			<div class="content">
 				{{ form_start(form) }}
-				{{ form_row(form.titre, {'label': ' ','attr': {'class': 'form-control','placeholder': 'Entrez le titre','onchange': "updateTexta(this, 'input')"}}) }}
-				{{ form_row(form.description,{'label':' ','attr': {'class': 'form-control', 'placeholder': 'Entrez la description','onchange':"updateTexta(this,'textarea')"  }}) }}
-				<button type="submit" class="btn_valide">Valider</button>
+				{{ form_row(form.titre, {'label': ' ','attr': {'class': 'form-control titre','data-id':0,'placeholder': 'Entrez le titre','onchange': "updateTexta(this, 'input')"}}) }}
+				{{ form_row(form.description,{'label':' ','attr': {'class': 'form-control description','data-id':0, 'placeholder': 'Entrez la description','onchange':"updateTexta(this,'textarea')"  }}) }}
+				<button type="button" class="btn_valide">Valider</button>
 				{{ form_end(form) }}
 			</div>
 			<section class="content_list">
 				{% for note in noteAll %}
 					<div class="item">
-						<p class="title_note">{{note.titre}}</p>
-						<p class="text_descri">{{note.description}}</p>
-						<a href="{{path('app_modification',{id:note.id})}}">
-							<button type="button" class="by_modif">modif</button>
-						</a>
-						{# <a href="{{path('app_delete',{id:note.id})}}">
-												                        <button type="button" onclick="supprimer({{note.id}})">supprimer</button>
-												                    </a> #}
-						<button type="button" onclick="supprimer({{note.id}})">supprimer</button>
+						<p class="title_note form-control">{{note.titre}}</p>
+						<p class="text_descri form-control">{{note.description}}</p>
+							<button type="button" onclick="modification({{note.id}})" class="by_modif">modif</button>
+							<button type="button" onclick="supprimer({{note.id}})">supprimer</button>
 					</div>
 				{% endfor %}
 			</section>
-			<button class="my_btn" onclick="create()">+</button>
+			<button class="my_btn">+</button>
 		</div>
 	</div>
 
@@ -41,35 +36,77 @@
 			content_form.classList.toggle('hidden');
 			});
 		}
-		var btn_modif = document.querySelector('.by_modif');
-		if(btn_modif) {
-			btn_modif.addEventListener('click',function(){
-				if(content_form.classList.contains('hidden')){
-					content_form.classList.remove('hidden');
+		
+		function modification(id) {
+			$.ajax({
+				url: "{{path('app_modification')}}",
+				method: "post",
+				data: {id:id},
+				success: function(response){
+					if(content_form.classList.contains('hidden')){
+						content_form.classList.remove('hidden');
+					}
 				}
-			})
+			});
 		}
 		/*---------------------------------*/
 		/*---------------Create note with data null and attibuate id -> lastId -----------------*/
 		var btn_valide = document.querySelector('.btn_valide');
 		if (btn_valide) {
 			btn_valide.addEventListener('click', function () {
-				$.ajax({
-					url:"{{ path('app_create') }}",
-					method: "get",
-					success: function (response) {
-						var input = document.querySelectorAll('.form-control');
-						for (var i = 0; i < input.length; i++) {
-						input[i].dataset.id = response;
+				var titreInput = document.querySelector('.titre');
+				var descriptionInput = document.querySelector('.description');
+
+				if (!titreInput || !descriptionInput) return;
+
+				var titre = titreInput.value;
+				var description = descriptionInput.value;
+				var idTitre = titreInput.dataset.id;
+				var idDescription = descriptionInput.dataset.id;
+
+				var isModification = idTitre && idTitre != "0";
+
+				if (isModification) {
+					$.ajax({
+						url: "{{ path('app_modification') }}",
+						method: "POST",
+						data: {
+							id: idTitre, 
+							titre: titre,
+							description: description
+						},
+						success: function (response) {
+							console.log('Modifié avec succès');
+							location.reload();
+						},
+						error: function (error) {
+							console.error(error);
 						}
-					},
-					error: function (er) {
-						console.error(er);
-					}
-				});
-				location.reload();
+					});
+				} else {
+					$.ajax({
+						url: "{{ path('app_create') }}",
+						method: "POST",
+						data: {
+							titre: titre,
+							description: description
+						},
+						success: function (response) {
+							var inputs = document.querySelectorAll('.form-control');
+							inputs.forEach(function (input) {
+								input.dataset.id = response;
+							});
+							console.log('Créé avec succès');
+							location.reload();
+						},
+						error: function (error) {
+							console.error(error);
+						}
+					});
+				}
 			});
 		}
+
 		/* supprimer le note */
 		function supprimer(id) {
 			$.ajax({
@@ -87,16 +124,18 @@
 
 		/*update information*/
 		function updateTexta(el, type) {
-			$.ajax({
-				url:"{{ path('app_maj') }}",
-				method: "get",
-				data: {
-				id: el.dataset.id,
-				type: type,
-				element: el.value
-				},
-				success: function (response) {}
-			});
+			if(el.dataset.id){
+				$.ajax({
+					url:"{{ path('app_maj') }}",
+					method: "get",
+					data: {
+					id: el.dataset.id,
+					type: type,
+					element: el.value
+					},
+					success: function (response) {}
+				});
+			}
 		}
 		
 	</script>

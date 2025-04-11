@@ -38,34 +38,37 @@ class HomeController extends AbstractController
         ]);
     }
     /**
-     * @Route("/create", name="app_create")
+     * @Route("/create", name="app_create",methods="POST")
      */
     public function create(Request $request,NotesRepository $note_repo)
     {
-        $last_id = $note_repo->create_note();
+        $titre= $request->request->get('titre');
+        $description= $request->request->get('description');
+        $last_id = $note_repo->create_note($titre,$description);
         return $this->json($last_id,200);
     }
     /**
-     * @Route("/modification", name="app_maj")
+     * @Route("/modification_text", name="app_maj")
      */
     public function update_text(Request $request,NotesRepository $note_repo)
     {
         $type = $request->query->get('type');
-        $text= $request->query->get('element');
+        $text_value= $request->query->get('element');
         $id= $request->query->get('id');
         
         if($id) {
-            if(($type == "input" && $text) || ($type == "textarea" && $text)) {
-                $note_repo->update_note($id,$type,$text);
+            if(($type == "input" && $text_value) || ($type == "textarea" && $text_value)) {
+                $note_repo->update_note($id,$type,$text_value);
             }
         }
         return $this->json(['message' => 'insertion Faite'], 200);
     }
     /**
-     * @Route("/modification/{id}", name="app_modification", methods= {"GET", "POST"})
+     * @Route("/modification", name="app_modification", methods= {"GET", "POST"})
      */
-    function update_btn_modifier(int $id,Request $request,NotesRepository $note_repo,SerializerInterface $serializer) {
+    function update_btn_modifier(Request $request,NotesRepository $note_repo,SerializerInterface $serializer) {
 
+        $id = $request->request->get('id');
         $note = $note_repo->findOneBy(['id'=>$id]);
     
         $form = $this->createForm(NoteType::class,$note);
@@ -74,12 +77,8 @@ class HomeController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
             return $this->redirectToRoute('app_home');
-        }
-        $note_All = $note_repo->all_notes();       
-        return $this->render('home/index.html.twig', [
-            'form'=>$form->createView(),
-            'noteAll'=>$note_All
-        ]);
+        }   
+        return $this->json(['message' => 'modification apporté'], 200);
         // $jsonContent = $serializer->serialize($note, 'json');
         // $response = new JsonResponse($jsonContent,200,[],true);
     }

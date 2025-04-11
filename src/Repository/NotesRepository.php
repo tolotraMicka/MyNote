@@ -41,14 +41,14 @@ class NotesRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function create_note() {
+    public function create_note($titre,$descri) {
         $connection = $this->em->getConnection();
         
         $requete = "INSERT INTO Notes (titre, description) VALUES (:titre, :description)";
         $statement = $connection->prepare($requete);
         $statement->execute([
-                ':titre' => null,
-                ':description' => null
+                ':titre' => $titre,
+                ':description' => $descri
             ]);
         $dernier_id = $connection->lastInsertId();
         return $dernier_id;
